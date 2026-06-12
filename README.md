@@ -5,11 +5,10 @@ A direct booking platform and AI-powered guest review sentiment classifier for T
 ## Tech Stack
 
 ### Frontend
-- React
+- Next JS
 
 ### Backend
-- Node.js
-- Express.js
+- Python/Fast API
 
 ### Database
 - PostgreSQL
