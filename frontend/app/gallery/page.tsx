@@ -1,6 +1,6 @@
 export default function GalleryPage() {
   return (
-    <main className="bg-gray-50 min-h-screen">
+    <main className="bg-gray-50  dark:bg-gray-900 min-h-screen">
 
       {/* Hero Section */}
       <section className="relative h-[40vh] flex items-center justify-center">
@@ -31,7 +31,7 @@ export default function GalleryPage() {
             Photo Gallery
           </h2>
 
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Discover breathtaking mountain views, cozy rooms,
             delicious local cuisine, and unforgettable experiences
             at Trishul Eco Homestays.
