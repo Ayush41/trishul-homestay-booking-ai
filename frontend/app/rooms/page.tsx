@@ -3,10 +3,43 @@
 import Card from "@/components/Card";
 import Button from "@/components/ui/button";
 import Modal from "@/components/ui/modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+
+type Room = {
+  id: number;
+  name: string;
+  price: number;
+  description:string;
+  image:string;
+  rating:number;
+};
 
 export default function RoomsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+
+  useEffect(() => {
+  fetch("http://127.0.0.1:8000/api/rooms")
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Failed to fetch rooms");
+      }
+      return res.json();
+    })
+    .then((data) => {
+      setRooms(data);
+      setLoading(false);
+    })
+    .catch((error) => {
+      console.error(error);
+      setError("Unable to load rooms.");
+      setLoading(false);
+    });
+}, []);
 
   return (
     <main className="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
@@ -40,51 +73,40 @@ export default function RoomsPage() {
           </p>
         </div>
 
+        {loading && (
+              <p className="text-center text-lg">
+                  Loading rooms...
+              </p>
+        )}
+
+        {error && (
+            <p className="text-center text-red-500 text-lg">
+                {error}
+            </p>
+        )}
+
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
+        {rooms.map((room) => (
           <Card
-            title="Standard Room"
-            description="Cozy room with balcony view and essential amenities."
-            image="/images/standardRoom.jpg"
-            price="2499"
-            rating="4.5"
-          />
-
-          <Card
-            title="Deluxe Room"
-            description="Spacious room with mountain views and premium interiors."
-            image="/images/deluxeRoom.jpg"
-            price="3999"
-            rating="4.8"
-          />
-
-          <Card
-            title="Family Suite"
-            description="Large room ideal for families and groups."
-            image="/images/familyRoom.jpg"
-            price="5499"
-            rating="4.9"
-          />
-
-          <Card
-            title="Luxury Cottage"
-            description="Private wooden cottage surrounded by nature."
-            image="/images/cottageRoom.png"
-            price="7999"
-            rating="5.0"
-          />
-
-          <Card
-            title="Premium Room"
-            description="Sustainable room with eco-friendly amenities."
-            image="/images/PremiumSuite.jpg"
-            price="2999"
-            rating="4.7"
-          />
+            key={room.id}
+            title={room.name}
+            description={room.description}
+            image={room.image}
+            price={room.price.toString()}
+            rating={room.rating.toString()}
+            onBook={() => {
+              setSelectedRoom(room);
+              setIsModalOpen(true);
+            }}
+            />
+        ))}
 
         </div>
 
       </section>
+
+     
 
       {/* Amenities */}
       <section className="bg-white dark:bg-gray-800 py-20">
@@ -135,6 +157,7 @@ export default function RoomsPage() {
         />
       </section>
 
+
       {/* Modal */}
       <Modal
         isOpen={isModalOpen}
@@ -145,19 +168,52 @@ export default function RoomsPage() {
           Ready to book your mountain getaway?
         </p>
 
-        <div className="flex gap-3 justify-end">
-          <Button
-            text="Continue"
-            variant="primary"
-          />
+        <div className="space-y-4">
+  <h3 className="text-lg font-semibold">
+    {selectedRoom?.name}
+  </h3>
 
-          <Button
-            text="Cancel"
-            variant="secondary"
-            onClick={() => setIsModalOpen(false)}
-          />
-        </div>
+  <div>
+    <label className="block mb-1">Check-in Date</label>
+    <input
+      type="date"
+      className="w-full border rounded-lg p-2 bg-white dark:bg-gray-700"
+    />
+  </div>
+
+  <div>
+    <label className="block mb-1">Check-out Date</label>
+    <input
+      type="date"
+      className="w-full border rounded-lg p-2 bg-white dark:bg-gray-700"
+    />
+  </div>
+
+  <div>
+    <label className="block mb-1">Guests</label>
+    <input
+      type="number"
+      min="1"
+      defaultValue="1"
+      className="w-full border rounded-lg p-2 bg-white dark:bg-gray-700"
+    />
+  </div>
+
+  <div className="flex gap-3 justify-end">
+    <Button
+      text="Check Availability"
+      variant="primary"
+    />
+
+    <Button
+      text="Cancel"
+      variant="secondary"
+      onClick={() => setIsModalOpen(false)}
+    />
+  </div>
+</div>
       </Modal>
+
 
     </main>
   );

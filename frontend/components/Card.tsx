@@ -1,9 +1,12 @@
+import Button from "./ui/button";
+
 type RoomCardProps = {
   title: string;
   description: string;
   image: string;
   price: string;
   rating: string;
+  onBook: () => void;
 };
 
 export default function RoomCard({
@@ -12,9 +15,12 @@ export default function RoomCard({
   image,
   price,
   rating,
-}: RoomCardProps) {
+  onBook,
+}: RoomCardProps)
+
+{
   return (
-    <div className="bg-white rounded-3xl overflow-hidden shadow-lg 
+    <div className="bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg 
     hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 h-full">
       <img
         src={image}
@@ -28,7 +34,7 @@ export default function RoomCard({
           <span>⭐ {rating}</span>
         </div>
 
-        <p className="text-gray-600 mt-2">
+        <p className=" bg-white dark:bg-gray-800  mt-2">
           {description}
         </p>
 
@@ -37,9 +43,13 @@ export default function RoomCard({
             ₹{price}
           </span>
 
-          <button className="bg-green-700 text-white px-4 py-2 rounded-lg">
-            Book Now
-          </button>
+          <Button 
+          text="Book Now" 
+          variant="primary"
+          size="sm"
+          onClick={onBook} 
+          />
+          
         </div>
       </div>
     </div>
