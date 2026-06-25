@@ -12,3 +12,11 @@ dist/
 
 # Next.js build files
 .next/
+
+# Python virtual environments
+myenv/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
