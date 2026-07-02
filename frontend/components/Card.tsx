@@ -6,7 +6,7 @@ type RoomCardProps = {
   image: string;
   price: string;
   rating: string;
-  onBook: () => void;
+  onBook?: () => void;
 };
 
 export default function RoomCard({
@@ -17,6 +17,8 @@ export default function RoomCard({
   rating,
   onBook,
 }: RoomCardProps)
+
+
 
 {
   return (
@@ -47,7 +49,7 @@ export default function RoomCard({
           text="Book Now" 
           variant="primary"
           size="sm"
-          onClick={onBook} 
+          onClick={onBook } 
           />
           
         </div>
