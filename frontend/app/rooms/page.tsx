@@ -22,6 +22,17 @@ export default function RoomsPage() {
   const [error, setError] = useState("");
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
 
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [guests, setGuests] = useState(1);
+
+
+  const [availabilityMessage, setAvailabilityMessage] = useState("");
+  const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
+
+  const [guestName, setGuestName] = useState("");
+  const [email, setEmail] = useState("");
+
   useEffect(() => {
   fetch("http://127.0.0.1:8000/api/rooms")
     .then((res) => {
@@ -40,6 +51,106 @@ export default function RoomsPage() {
       setLoading(false);
     });
 }, []);
+
+
+/*function  for availability message when button is clicked*/
+const checkAvailability = async () => {
+  if (!selectedRoom) {
+    alert("Please select a room.");
+    return;
+  }
+
+  if (!checkIn || !checkOut) {
+    alert("Please select check-in and check-out dates.");
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      "http://127.0.0.1:8000/api/check-availability",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          room_id: selectedRoom.id,
+          check_in: `${checkIn}T00:00:00`,
+          check_out: `${checkOut}T00:00:00`,
+          guests: guests,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    console.log("API Response:", data);
+
+    setAvailabilityMessage(data.message);
+    setIsAvailable(data.available);
+
+  } catch (error) {
+    console.error(error);
+
+    setAvailabilityMessage("Unable to connect to server.");
+    setIsAvailable(false);
+  }
+};
+
+/*--------function for booking confirmation when button is clicked---------*/
+
+const confirmBooking = async () => {
+  if (!selectedRoom) return;
+
+  if (!guestName || !email) {
+    alert("Please enter your name and email.");
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      "http://127.0.0.1:8000/api/book-room",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          guestName: guestName,
+          email: email,
+          roomId: selectedRoom.id,
+          userId: Number(localStorage.getItem("userId")),
+          checkIn: `${checkIn}T00:00:00`,
+          checkOut: `${checkOut}T00:00:00`,
+          guests: guests,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    alert(data.message);
+
+    // Close modal
+    setIsModalOpen(false);
+
+    // Clear form
+    setGuestName("");
+    setEmail("");
+    setCheckIn("");
+    setCheckOut("");
+    setGuests(1);
+
+    setAvailabilityMessage("");
+    setIsAvailable(null);
+
+  } catch (error) {
+    console.error(error);
+    alert("Booking failed.");
+  }
+};
+
+
 
   return (
     <main className="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
@@ -97,6 +208,14 @@ export default function RoomsPage() {
             rating={room.rating.toString()}
             onBook={() => {
               setSelectedRoom(room);
+
+              setCheckIn("");
+              setCheckOut("");
+              setGuests(1);
+
+              setAvailabilityMessage("");
+              setIsAvailable(null);
+
               setIsModalOpen(true);
             }}
             />
@@ -176,15 +295,19 @@ export default function RoomsPage() {
   <div>
     <label className="block mb-1">Check-in Date</label>
     <input
-      type="date"
-      className="w-full border rounded-lg p-2 bg-white dark:bg-gray-700"
-    />
+        type="date"
+  value={checkIn}
+  onChange={(e) => setCheckIn(e.target.value)}
+  className="w-full border rounded-lg p-2 bg-white dark:bg-gray-700"
+/>
   </div>
 
   <div>
     <label className="block mb-1">Check-out Date</label>
     <input
       type="date"
+      value={checkOut}
+      onChange={(e) => setCheckOut(e.target.value)}
       className="w-full border rounded-lg p-2 bg-white dark:bg-gray-700"
     />
   </div>
@@ -193,17 +316,66 @@ export default function RoomsPage() {
     <label className="block mb-1">Guests</label>
     <input
       type="number"
-      min="1"
-      defaultValue="1"
+      value={guests}
+      onChange={(e) => setGuests(parseInt(e.target.value) || 1)}
       className="w-full border rounded-lg p-2 bg-white dark:bg-gray-700"
     />
   </div>
+
+  {availabilityMessage && (
+  <div
+    className={`rounded-lg p-3 text-center font-semibold ${
+      isAvailable
+        ? "bg-green-100 text-green-700"
+        : "bg-red-100 text-red-700"
+    }`}
+  >
+    {availabilityMessage}
+  </div>
+)}
+
+{isAvailable && (
+  <>
+    <div>
+      <label className="block mb-1">Guest Name</label>
+      <input
+        type="text"
+        value={guestName}
+        onChange={(e) => setGuestName(e.target.value)}
+        placeholder="Enter your full name"
+        className="w-full border rounded-lg p-2 bg-white dark:bg-gray-700"
+      />
+    </div>
+
+    <div>
+      <label className="block mb-1">Email</label>
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Enter your email"
+        className="w-full border rounded-lg p-2 bg-white dark:bg-gray-700"
+      />
+    </div>
+
+    <div className="flex justify-end mt-4">
+  <Button
+    text="Confirm Booking"
+    variant="primary"
+    onClick={confirmBooking}
+  />
+</div>
+  </>
+)}
+
+
 
   <div className="flex gap-3 justify-end">
     <Button
       text="Check Availability"
       variant="primary"
-    />
+      onClick={checkAvailability}
+  />
 
     <Button
       text="Cancel"
