@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-interface ModalProps {
+interface ModalProps {c
   isOpen: boolean;
   onClose: () => void;
   title: string;
@@ -26,7 +26,7 @@ export default function Modal({
 
     if (isOpen) {
       document.addEventListener("keydown", handleEscape);
-      modalRef.current?.focus();
+      //modalRef.current?.focus();
     }
 
     return () => {

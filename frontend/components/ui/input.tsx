@@ -1,13 +1,19 @@
+import React from "react";
+
 interface InputProps {
   type?: string;
   placeholder: string;
   label?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function Input({
   type = "text",
   placeholder,
   label,
+  value,
+  onChange,
 }: InputProps) {
   return (
     <div className="flex flex-col gap-2">
@@ -20,6 +26,8 @@ export default function Input({
       <input
         type={type}
         placeholder={placeholder}
+        value={value}
+        onChange={onChange}
         className="
           border border-gray-300 dark:border-gray-600
           bg-white dark:bg-gray-700
