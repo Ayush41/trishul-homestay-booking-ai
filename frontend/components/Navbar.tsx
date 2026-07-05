@@ -78,6 +78,10 @@ export default function Navbar() {
     router.push("/");
   };
 
+  const mobileMenuClasses = isOpen
+    ? "max-h-[1200px] opacity-100 pt-4 pb-4 pointer-events-auto"
+    : "max-h-0 opacity-0 pt-0 pb-0 pointer-events-none";
+
   return (
     <nav className="sticky top-0 z-50 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-800/70 px-4 md:px-8 py-4">
       <div className="flex items-center justify-between">
@@ -103,10 +107,13 @@ export default function Navbar() {
 
         {/* Mobile Menu Button */}
         <button
-          className="lg:hidden text-slate-900 dark:text-white text-3xl"
+          className="lg:hidden flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-300/70 dark:border-slate-700/70 bg-white/90 dark:bg-slate-950/90 text-slate-900 dark:text-white text-3xl shadow-sm transition-colors duration-300 ease-in-out hover:bg-emerald-600 hover:text-white"
           onClick={() => setIsOpen(!isOpen)}
+          aria-label="Toggle navigation menu"
         >
-          ☰
+          <span className={`block transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"}`}>
+            {isOpen ? "✕" : "☰"}
+          </span>
         </button>
 
         {/* Desktop Navigation */}
@@ -235,8 +242,7 @@ export default function Navbar() {
       </div>
 
       {/* Mobile Menu */}
-      {isOpen && (
-        <div className="lg:hidden flex flex-col gap-4 mt-4 py-4 px-4 rounded-3xl bg-white/95 dark:bg-slate-950/95 border border-slate-200/70 dark:border-slate-800/70 text-slate-900 dark:text-white shadow-xl backdrop-blur-xl">
+      <div className={`lg:hidden flex flex-col gap-4 mt-4 overflow-hidden rounded-3xl bg-white/95 dark:bg-slate-950/95 border border-slate-200/70 dark:border-slate-800/70 text-slate-900 dark:text-white shadow-xl backdrop-blur-xl transition-[max-height,opacity,padding] duration-300 ease-in-out ${mobileMenuClasses}`}>
 
           <Link
             href="/"
@@ -341,7 +347,6 @@ export default function Navbar() {
           )}
 
         </div>
-      )}
     </nav>
   );
 }
