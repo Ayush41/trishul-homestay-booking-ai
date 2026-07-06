@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-interface ModalProps {c
+interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;

@@ -78,44 +78,64 @@ export default function Navbar() {
     router.push("/");
   };
 
+  const mobileMenuClasses = isOpen
+    ? "max-h-[1200px] opacity-100 pt-4 pb-4 pointer-events-auto"
+    : "max-h-0 opacity-0 pt-0 pb-0 pointer-events-none";
+
   return (
-    <nav className="bg-gray-600 shadow-md px-4 md:px-8 py-4">
+    <nav className="sticky top-0 z-50 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-800/70 px-4 md:px-8 py-4">
       <div className="flex items-center justify-between">
 
         {/* Logo */}
         <Link
           href="/"
-          className="text-lg lg:text-2xl font-bold text-white"
+          className="flex items-center gap-3 text-slate-900 dark:text-white"
         >
-          Trishul Eco Homestays
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-3xl bg-emerald-600 text-white text-lg font-extrabold shadow-lg shadow-emerald-500/30">
+            T
+          </span>
+
+          <span className="leading-tight">
+            <span className="block text-xl lg:text-2xl font-extrabold tracking-tight">
+              Trishul
+            </span>
+            <span className="block text-xs lg:text-sm text-slate-500 dark:text-slate-300 font-medium">
+              Eco Homestays
+            </span>
+          </span>
         </Link>
 
         {/* Mobile Menu Button */}
         <button
-          className="lg:hidden text-white text-3xl"
+          className="lg:hidden flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-300/70 dark:border-slate-700/70 bg-white/90 dark:bg-slate-950/90 text-slate-900 dark:text-white text-3xl shadow-sm transition-colors duration-300 ease-in-out hover:bg-emerald-600 hover:text-white"
           onClick={() => setIsOpen(!isOpen)}
+          aria-label="Toggle navigation menu"
         >
-          ☰
+          <span className={`block transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"}`}>
+            {isOpen ? "✕" : "☰"}
+          </span>
         </button>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center gap-6 text-white">
+        <div className="hidden lg:flex items-center gap-8 text-slate-900 dark:text-white">
 
-          <Link href="/">Home</Link>
+          <Link href="/" className="text-sm font-semibold uppercase tracking-wide hover:text-emerald-700 dark:hover:text-emerald-300 transition">
+            Home
+          </Link>
 
-          <Link href="/about">
+          <Link href="/about" className="text-sm font-semibold uppercase tracking-wide hover:text-emerald-700 dark:hover:text-emerald-300 transition">
             About
           </Link>
 
-          <Link href="/rooms">
+          <Link href="/rooms" className="text-sm font-semibold uppercase tracking-wide hover:text-emerald-700 dark:hover:text-emerald-300 transition">
             Rooms
           </Link>
 
-          <Link href="/contact">
+          <Link href="/contact" className="text-sm font-semibold uppercase tracking-wide hover:text-emerald-700 dark:hover:text-emerald-300 transition">
             Contact
           </Link>
 
-          <Link href="/recommendation">
+          <Link href="/recommendation" className="text-sm font-semibold uppercase tracking-wide hover:text-emerald-700 dark:hover:text-emerald-300 transition">
             AI Sentiment
           </Link>
 
@@ -124,7 +144,7 @@ export default function Navbar() {
           {!user ? (
             <Link
               href="/login"
-              className="bg-green-700 px-4 py-2 rounded-lg hover:bg-green-800 transition"
+              className="bg-emerald-600 text-white px-5 py-2 rounded-full shadow-lg shadow-emerald-500/30 hover:bg-emerald-700 transition text-sm font-semibold"
             >
               Login
             </Link>
@@ -137,7 +157,7 @@ export default function Navbar() {
                 onClick={() =>
                   setProfileOpen(!profileOpen)
                 }
-                className="flex items-center gap-2 bg-green-700 hover:bg-green-800 px-4 py-2 rounded-lg transition"
+                className="flex items-center gap-2 bg-emerald-600 text-white hover:bg-emerald-700 px-5 py-2 rounded-full shadow-lg shadow-emerald-500/30 transition text-sm font-semibold"
               >
                 <span className="text-lg">
                   👤
@@ -222,12 +242,12 @@ export default function Navbar() {
       </div>
 
       {/* Mobile Menu */}
-      {isOpen && (
-        <div className="lg:hidden flex flex-col gap-4 mt-4 py-4 border-t border-gray-500 text-white">
+      <div className={`lg:hidden flex flex-col gap-4 mt-4 overflow-hidden rounded-3xl bg-white/95 dark:bg-slate-950/95 border border-slate-200/70 dark:border-slate-800/70 text-slate-900 dark:text-white shadow-xl backdrop-blur-xl transition-[max-height,opacity,padding] duration-300 ease-in-out ${mobileMenuClasses}`}>
 
           <Link
             href="/"
             onClick={() => setIsOpen(false)}
+            className="font-medium hover:text-emerald-700 dark:hover:text-emerald-300 transition"
           >
             Home
           </Link>
@@ -235,6 +255,7 @@ export default function Navbar() {
           <Link
             href="/about"
             onClick={() => setIsOpen(false)}
+            className="font-medium hover:text-emerald-700 dark:hover:text-emerald-300 transition"
           >
             About
           </Link>
@@ -242,6 +263,7 @@ export default function Navbar() {
           <Link
             href="/rooms"
             onClick={() => setIsOpen(false)}
+            className="font-medium hover:text-emerald-700 dark:hover:text-emerald-300 transition"
           >
             Rooms
           </Link>
@@ -249,6 +271,7 @@ export default function Navbar() {
           <Link
             href="/contact"
             onClick={() => setIsOpen(false)}
+            className="font-medium hover:text-emerald-700 dark:hover:text-emerald-300 transition"
           >
             Contact
           </Link>
@@ -256,6 +279,7 @@ export default function Navbar() {
           <Link
             href="/recommendation"
             onClick={() => setIsOpen(false)}
+            className="text-sm font-semibold uppercase tracking-wide hover:text-emerald-700 dark:hover:text-emerald-300 transition"
           >
             AI Sentiment
           </Link>
@@ -268,12 +292,12 @@ export default function Navbar() {
             <Link
               href="/login"
               onClick={() => setIsOpen(false)}
-              className="bg-green-700 px-4 py-2 rounded-lg hover:bg-green-800 transition text-center"
+              className="bg-emerald-600 text-white px-4 py-2 rounded-full shadow hover:bg-emerald-700 transition text-center"
             >
               Login
             </Link>
           ) : (
-            <div className="flex flex-col gap-3 pt-4 border-t border-gray-500">
+            <div className="flex flex-col gap-3 pt-4 border-t border-slate-300/70 dark:border-slate-700/70">
 
               <div>
                 <p className="font-bold">
@@ -288,6 +312,7 @@ export default function Navbar() {
               <Link
                 href="/dashboard"
                 onClick={() => setIsOpen(false)}
+                className="font-medium hover:text-emerald-700 dark:hover:text-emerald-300 transition"
               >
                 📊 Dashboard
               </Link>
@@ -295,6 +320,7 @@ export default function Navbar() {
               <Link
                 href="/profile"
                 onClick={() => setIsOpen(false)}
+                className="font-medium hover:text-emerald-700 dark:hover:text-emerald-300 transition"
               >
                 👤 Profile
               </Link>
@@ -302,6 +328,7 @@ export default function Navbar() {
               <Link
                 href="/bookings"
                 onClick={() => setIsOpen(false)}
+                className="font-medium hover:text-emerald-700 dark:hover:text-emerald-300 transition"
               >
                 📅 My Bookings
               </Link>
@@ -311,7 +338,7 @@ export default function Navbar() {
                   handleLogout();
                   setIsOpen(false);
                 }}
-                className="text-left text-red-300"
+                className="text-left text-red-500 hover:text-red-300 transition"
               >
                 🚪 Logout
               </button>
@@ -320,7 +347,6 @@ export default function Navbar() {
           )}
 
         </div>
-      )}
     </nav>
   );
 }

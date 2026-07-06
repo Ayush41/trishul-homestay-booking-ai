@@ -1,7 +1,7 @@
 export default function Hero() {
   return (
     <section
-      className="relative h-[85vh] bg-cover bg-center"
+      className="relative h-[calc(100vh-5rem)] bg-cover bg-center"
       style={{
         backgroundImage: "url('/images/h.png')",
       }}
